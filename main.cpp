@@ -83,11 +83,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
 		/// ボール
-		//if(crashDecision(sphere[0], sphere[1])) {
-		//	DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
-		//} else {
-		DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		//}
+		if (crashDecision(sphere, plane)) {
+			DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		} else {
+			DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		}
+		DrawPlane(plane, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Balls");

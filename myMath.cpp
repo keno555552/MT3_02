@@ -1007,15 +1007,21 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 		points[index] = viewFinilTransform(viewFinilTransform(point, viewProjectionMatrix), viewportMatrix);
 	}
 	// pointsをそれぞれ結んでDrawLineで矩形を描画する。DrawTriangleを使って塗りつぶしても良いが、DepthがないのでMT3では分かりづらい
-	color;
-
-
+	Novice::DrawLine((int)points[0].x, (int)points[0].y,
+					 (int)points[2].x, (int)points[2].y, color);
+	Novice::DrawLine((int)points[2].x, (int)points[2].y,
+					 (int)points[1].x, (int)points[1].y, color);
+	Novice::DrawLine((int)points[1].x, (int)points[1].y,
+					 (int)points[3].x, (int)points[3].y, color);
+	Novice::DrawLine((int)points[3].x, (int)points[3].y,
+					 (int)points[0].x, (int)points[0].y, color);
 }
 
 Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
-	v1; v2;
-	return Vector3();
+	//float a = Length(v1);
+	Vector3 b = Normalize(v2);
+	return Dot(v1, b) * b;
 }
 
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment)

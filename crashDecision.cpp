@@ -110,7 +110,9 @@ bool crashDecision(const Sphere& s1, const Plane& s2)
 {
 	Sphere ss1 = s1;
 	Plane ss2 = s2;
-	ss1, ss2;
-
+	float distance = Dot(ss1.center, ss2.normal) - ss2.distance;
+	if (distance < ss1.radius) {
+		return true;
+	}
 	return false;
 }
