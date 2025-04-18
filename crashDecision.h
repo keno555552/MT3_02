@@ -90,4 +90,12 @@ void crashBorder(float* x, float* y, float w, float h, int lx, int rx, int ty);
 /// <param name="s1">Sphere1</param>
 /// <param name="s2">Sphere2</param>
 /// <returns>isHit</returns>
-bool crashDecisionBallBool(const Sphere& s1,const Sphere& s2);
+bool crashDecision(const Sphere& s1,const Sphere& s2);
+
+/// <summary>
+/// Ball(Sphere) Hit Decision
+/// </summary>
+/// <param name="s1">Sphere1</param>
+/// <param name="s2">Sphere2</param>
+/// <returns>isHit</returns>
+bool crashDecision(const Sphere& s1,const Plane& s2);

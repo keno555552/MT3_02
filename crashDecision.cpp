@@ -95,7 +95,7 @@ void crashBorder(float* x, float* y, float w, float h, int lx, int rx, int ty) {
 	}
 }
 
-bool crashDecisionBallBool(const Sphere& s1, const Sphere& s2)
+bool crashDecision(const Sphere& s1, const Sphere& s2)
 {
 	Sphere ss1 = s1;
 	Sphere ss2 = s2;
@@ -103,5 +103,14 @@ bool crashDecisionBallBool(const Sphere& s1, const Sphere& s2)
 	if (distance < ss1.radius + ss2.radius) {
 		return true;
 	}
+	return false;
+}
+
+bool crashDecision(const Sphere& s1, const Plane& s2)
+{
+	Sphere ss1 = s1;
+	Plane ss2 = s2;
+	ss1, ss2;
+
 	return false;
 }

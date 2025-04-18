@@ -984,16 +984,38 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 	}
 }
 
-#pragma endregion
+Vector3 Perpendicular(const Vector3& vector)
+{
+	if (vector.x != 0.0f || vector.y != 0.0f) {
+		return { -vector.y, vector.x, 0.0f }; // 1
+	}
+	return Vector3(0.0f, -vector.z, vector.y);
+}
+
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color) {
+	Vector3 center = Multiply(plane.distance, plane.normal); // 1
+	Vector3 perpendiculars[4];
+	perpendiculars[0] = Normalize(Perpendicular(plane.normal)); // 2
+	perpendiculars[1] = { -perpendiculars[0].x, -perpendiculars[0].y, -perpendiculars[0].z }; // 3
+	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]); // 4
+	perpendiculars[3] = { -perpendiculars[2].x, -perpendiculars[2].y, -perpendiculars[2].z }; // 5
+	// 6
+	Vector3 points[4];
+	for (int index = 0; index < 4; ++index) {
+		Vector3 extend = Multiply(2.0f, perpendiculars[index]);
+		Vector3 point = Add(center, extend);
+		points[index] = viewFinilTransform(viewFinilTransform(point, viewProjectionMatrix), viewportMatrix);
+	}
+	// pointsをそれぞれ結んでDrawLineで矩形を描画する。DrawTriangleを使って塗りつぶしても良いが、DepthがないのでMT3では分かりづらい
+	color;
 
 
-#pragma region Hit judgment
+}
 
 Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
-	//float a = Length(v1);
-	Vector3 b = Normalize(v2);
-	return Dot(v1, b) * b;
+	v1; v2;
+	return Vector3();
 }
 
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment)

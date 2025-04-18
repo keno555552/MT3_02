@@ -12,8 +12,8 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 ///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
 /// 計算に使う値
-Sphere sphere[2]{ {{-1.0f, 0.0f, 0.0f},0.5f},
-				  {{ 1.0f, 0.0f, 0.0f},0.5f} };
+Sphere sphere{ { 0.0f, 0.0f, 0.0f }, 0.5f };
+Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -83,19 +83,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
 		/// ボール
-		if(crashDecisionBallBool(sphere[0], sphere[1])) {
-			DrawSphere(sphere[1], cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
-		} else {
-			DrawSphere(sphere[1], cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		}
-		DrawSphere(sphere[0], cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		//if(crashDecision(sphere[0], sphere[1])) {
+		//	DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		//} else {
+		DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		//}
 
 		/// ImGui
 		ImGui::Begin("Balls");
-		ImGui::SliderFloat3("Spehe[0].center", &sphere[0].center.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("Spehe[0].center", &sphere[0].radius, 0.1f, 2.0f);
-		ImGui::SliderFloat3("Spehe[1].center", &sphere[1].center.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("Spehe[1].center", &sphere[1].radius, 0.1f, 2.0f);
+		ImGui::SliderFloat3("Spehe.center", &sphere.center.x, -5.0f, 5.0f);
+		ImGui::SliderFloat("Spehe.center", &sphere.radius, 0.1f, 2.0f);
+		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.1f);
+		ImGui::DragFloat("Plane.Distance", &plane.distance, 0.1f);
 		ImGui::End();
 
 

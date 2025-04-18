@@ -393,13 +393,8 @@ struct Transform {
 
 #pragma region Geometry
 
-#pragma region Grid
-
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
 
-#pragma endregion
-
-#pragma region Ball
 typedef struct Sphere {
 	Vector3 center;
 	float radius;
@@ -407,7 +402,15 @@ typedef struct Sphere {
 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
 
-#pragma endregion
+typedef struct Plane {
+	Vector3 normal; //<<< 法線ベクトル
+	float distance; //<<< 平面の方程式のdistance
+}Plane;
+
+Vector3 Perpendicular(const Vector3& vector);
+void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
+
+
 
 #pragma endregion
 
