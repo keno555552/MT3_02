@@ -102,7 +102,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Vector3 end = viewFinilTransform(viewFinilTransform(Add(segment.origin, segment.diff), cameraWorldViewProjectionMatrix), cameraViewportMatrix);
 		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
 
-
 		// pointやsegmentの値もImGuiで編集できるようにして結果を動かして理解を深めると良い
 
 		ImGui::Begin("rotate");
