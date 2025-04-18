@@ -1,5 +1,6 @@
 ﻿#include <Novice.h>
 #include "myMath.h"
+#include "crashDecision.h"
 #include "ImGui.h"
 
 const char kWindowTitle[] = "GC01_05_カン_ケンリャン";
@@ -11,11 +12,8 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 ///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
 /// 計算に使う値
-Segment segment{ {-2.0f, -1.0f, 0.0f}, {3.0f, 2.0f, 2.0f} };
-Vector3 point{ -1.5f, 0.6f, 0.6f };
-
-Vector3 project = Project(Subtract(point, segment.origin), segment.diff);
-Vector3 closestPoint = ClosestPoint(point, segment);
+Sphere sphere[2]{ {{-1.0f, 0.0f, 0.0f},0.5f},
+				  {{ 1.0f, 0.0f, 0.0f},0.5f} };
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -23,16 +21,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Novice::Initialize(kWindowTitle, kWindowWidth, kWindowHeight);
 
 	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	char keys[256] = { 0 };
+	char preKeys[256] = { 0 };
 
 	///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 	/// 初期化
 	///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
-	Sphere pointSphere{ point,0.01f };
-	Sphere closestPointSphere { closestPoint , 0.01f };
-	
+
 	///カメラ初期化
 	Vector3 cameraTranslate{ 0.0f, 1.9f, -6.49f };
 	Vector3 cameraRotate{ 0.26f, 0.0f, 0.0f };
@@ -71,13 +67,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// 更新処理
 		///=========================================================================================================================================================================================
 
-
-		//数値改変の更新処理
-		project = Project(Subtract(point, segment.origin), segment.diff);
-		closestPoint = ClosestPoint(point, segment);
-		pointSphere = { point,0.01f };
-		closestPointSphere = { closestPoint , 0.01f };
-
 		///カメラ更新処理
 		cameraMatix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, cameraRotate, cameraTranslate);
 		cameraViewMatrix = Inverse(cameraMatix);
@@ -93,32 +82,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// Grid
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
-		///点
-		DrawSphere(pointSphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, RED);
-		DrawSphere(closestPointSphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, BLACK);
+		/// ボール
+		if(crashDecisionBallBool(sphere[0], sphere[1])) {
+			DrawSphere(sphere[1], cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		} else {
+			DrawSphere(sphere[1], cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		}
+		DrawSphere(sphere[0], cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
-		// 線分は両端をそれぞれスクリーン座標系まで変換し、Novice::DrawLineを利用して描画する
-		Vector3 start = viewFinilTransform(viewFinilTransform(segment.origin, cameraWorldViewProjectionMatrix), cameraViewportMatrix);
-		Vector3 end = viewFinilTransform(viewFinilTransform(Add(segment.origin, segment.diff), cameraWorldViewProjectionMatrix), cameraViewportMatrix);
-		Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
-
-		// pointやsegmentの値もImGuiで編集できるようにして結果を動かして理解を深めると良い
-
-		ImGui::Begin("rotate");
-		//ImGui::SliderFloat3("cameraTranslate", &cameraTranslate.x, -10.0f, 10.0f);
-		//ImGui::SliderFloat3("cameraRotate", &cameraRotate.x, -3.14f, 3.14f);
-		//ImGui::SliderFloat3("point", &point.x, -10.0f, 10.0f);
-		
-		/// 点から線分への正射影ベクトルの結果はImGuiを利用して表示する
-		ImGui::InputFloat3("Point", &point.x, "%.3f");
-		ImGui::InputFloat3("Segment origin", &segment.origin.x, "%.3f");
-		ImGui::InputFloat3("Segment diff", &segment.diff.x, "%.3f");
-		//ImGui::SliderFloat3("Point", &point.x, -10.0f, 10.0f);
-		//ImGui::SliderFloat3("Segment origin", &segment.origin.x, -10.0f, 10.0f);
-		//ImGui::SliderFloat3("Segment diff", &segment.diff.x, -10.0f, 10.0f);
-		ImGui::InputFloat3("Project", &project.x, "%.3f", ImGuiInputTextFlags_ReadOnly);
-
+		/// ImGui
+		ImGui::Begin("Balls");
+		ImGui::SliderFloat3("Spehe[0].center", &sphere[0].center.x, -5.0f, 5.0f);
+		ImGui::SliderFloat("Spehe[0].center", &sphere[0].radius, 0.1f, 2.0f);
+		ImGui::SliderFloat3("Spehe[1].center", &sphere[1].center.x, -5.0f, 5.0f);
+		ImGui::SliderFloat("Spehe[1].center", &sphere[1].radius, 0.1f, 2.0f);
 		ImGui::End();
+
+
 
 		/// XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 		/// StageEND

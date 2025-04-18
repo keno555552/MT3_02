@@ -1,0 +1,93 @@
+﻿#pragma once
+#include <Math.h>
+#include "Novice.h"
+#include "myMath.h"
+
+struct AttactBox final {
+	Vector2 pos;
+	float width;
+	float height;
+};
+
+/// <summary>
+/// Draw HitBox
+/// </summary>
+/// <param name="posX"></param>
+/// <param name="posY"></param>
+/// <param name="Pos Move X"></param>
+/// <param name="Pos Move Y"></param>
+/// <param name="HitBox Width"></param>
+/// <param name="HitBox Height"></param>
+/// <param name="color"></param>
+extern void drawHitBox(float posX, float posY, float width, float height, unsigned int color);
+
+/// <summary>
+/// Hit Box Crash Decision
+/// </summary>
+/// <param name="hit box 1 center pos.x"></param>
+/// <param name="hit box 1 center pos.y"></param>
+/// <param name="hit box 1 width"></param>
+/// <param name="hit box 1 height"></param>
+/// <param name="hit box 2 center pos.x"></param>
+/// <param name="hit box 2 center pos.y"></param>
+/// <param name="hit box 2 width"></param>
+/// <param name="hit box 2 height"></param>
+bool crashDecisionBoxBool(float XA, float YA, float widthA, float heightA, float XB, float YB, float widthB, float heightB);
+
+/// <summary>
+/// Circle Hit Box Crash Decision
+/// </summary>
+/// <param name="XA"></param>
+/// <param name="YA"></param>
+/// <param name="RA"></param>
+/// <param name="XB"></param>
+/// <param name="YB"></param>
+/// <param name="RB"></param>
+/// <returns></returns>
+int crashDecisionCircleBool(float XA, float YA, float RA, float XB, float YB, float RB);
+
+
+/// <summary>
+/// 2 Circle Hit Decision
+/// </summary>
+/// <param name="pos1">Circle 1 pos</param>
+/// <param name="velocity1">Circle 1 velocity</param>
+/// <param name="mass1">Circle 1 mass</param>
+/// <param name="pos2">Circle 2 pos</param>
+/// <param name="velocity2">Circle 2 velocity</param>
+/// <param name="mass2">Circle 2 mass</param>
+/// <param name="restitution"> restitution </param>
+void calculateCollision(Vector2& pos1, Vector2& velocity1,float mass1, Vector2& pos2, Vector2& velocity2, float mass2, float restitution);
+
+
+/// <summary>
+/// Out Screen limiter
+/// </summary>
+/// <param name="center pos x"></param>
+/// <param name="center pos y"></param>
+/// <param name="width"></param>
+/// <param name="height"></param>
+/// <param name="Left limit"></param>
+/// <param name="Right limit"></param>
+/// <param name="Top limit"></param>
+void crashMap(float* x, float* y, float w, float h, int lx, int rx, int ty);
+
+/// <summary>
+/// Out Screen limiter
+/// </summary>
+/// <param name="center pos x"></param>
+/// <param name="center pos y"></param>
+/// <param name="width"></param>
+/// <param name="height"></param>
+/// <param name="Left limit"></param>
+/// <param name="Right limit"></param>
+/// <param name="Top limit"></param>
+void crashBorder(float* x, float* y, float w, float h, int lx, int rx, int ty);
+
+/// <summary>
+/// Ball(Sphere) Hit Decision
+/// </summary>
+/// <param name="s1">Sphere1</param>
+/// <param name="s2">Sphere2</param>
+/// <returns>isHit</returns>
+bool crashDecisionBallBool(const Sphere& s1,const Sphere& s2);
