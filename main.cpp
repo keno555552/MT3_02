@@ -84,14 +84,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// Grid
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
-		///// 判定と描画
-		//if (crashDecision(segment, plane)) {
-		//	Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
-		//} else {
-		//	Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		//}
+		/// 判定と描画
+		if (crashDecision(segment, triangle)) {
+			Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		} else {
+			Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		}
 		DrawTriangle(triangle, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Balls");

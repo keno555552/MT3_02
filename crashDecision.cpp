@@ -37,8 +37,7 @@ bool crashDecisionBoxBool(float XA, float YA, float widthA, float heightA, float
 
 	if (DFlat[0] == 2 && DFlat[1] == 2) {
 		return true;
-	}
-	else {
+	} else {
 		return false;
 	}
 }
@@ -47,13 +46,12 @@ int crashDecisionCircleBool(float XA, float YA, float RA, float XB, float YB, fl
 
 	if (RA + RB >= sqrtf(powf(XA - XB, 2) + powf(YA - YB, 2))) {
 		return 1;
-	}
-	else {
+	} else {
 		return 0;
 	}
 }
 
-void calculateCollision(Vector2& pos1, Vector2& velocity1, float mass1, Vector2& pos2, Vector2& velocity2, float mass2, float restitution){
+void calculateCollision(Vector2& pos1, Vector2& velocity1, float mass1, Vector2& pos2, Vector2& velocity2, float mass2, float restitution) {
 	Vector2 normal = { fabsf(pos2.x - pos1.x),fabsf(pos2.y - pos1.y) };
 	Vector2 relativeVelocity = { fabsf(velocity2.x - velocity1.x), fabsf(velocity2.y - velocity1.y) };
 
@@ -62,7 +60,7 @@ void calculateCollision(Vector2& pos1, Vector2& velocity1, float mass1, Vector2&
 
 	float impulse = -(1 + restitution) * velocityAlongNormal / (1 / mass1 + 1 / mass2);
 	Vector2 impulseVector = { normal.x * impulse , normal.y * impulse };
-	
+
 	velocity1 = { velocity1.x + (impulseVector.x * (1 / mass1)),
 				  velocity1.y + (impulseVector.y * (1 / mass1)) };
 	velocity2 = { velocity2.x + (impulseVector.x * (1 / mass2)),
@@ -95,8 +93,7 @@ void crashBorder(float* x, float* y, float w, float h, int lx, int rx, int ty) {
 	}
 }
 
-bool crashDecision(const Sphere& s1, const Sphere& s2)
-{
+bool crashDecision(const Sphere& s1, const Sphere& s2) {
 	Sphere ss1 = s1;
 	Sphere ss2 = s2;
 	float distance = Length(ss1.center - ss2.center);
@@ -106,8 +103,7 @@ bool crashDecision(const Sphere& s1, const Sphere& s2)
 	return false;
 }
 
-bool crashDecision(const Sphere& s1, const Plane& s2)
-{
+bool crashDecision(const Sphere& s1, const Plane& s2) {
 	Sphere ss1 = s1;
 	Plane ss2 = s2;
 	float distance = Dot(ss1.center, ss2.normal) - ss2.distance;
@@ -120,18 +116,17 @@ bool crashDecision(const Sphere& s1, const Plane& s2)
 	return false;
 }
 
-bool crashDecision(const Segment& segment, const Plane& plane)
-{
+bool crashDecision(const Segment& segment, const Plane& plane) {
 	/// まずは内積を求める
 	float dot = Dot(plane.normal, segment.diff);
 
-	// 平行してるかをチェック
+	/// 平行してるかをチェック
 	if (dot == 0.0f) {
 		return false;
 	}
 
 	/// tを求める
-	float t = (plane.distance - Dot(segment.origin,plane.normal))/dot;
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;
 
 	/// tの値と線の種類によって衝突してるかを判断する
 	if (t >= 0 && t <= 1) {
@@ -140,22 +135,39 @@ bool crashDecision(const Segment& segment, const Plane& plane)
 	return false;
 }
 
-bool crashDecision(const Segment& segment, const Triangle& triangle)
-{
+bool crashDecision(const Segment& segment, const Triangle& triangle) {
 	Vector3 tp1 = triangle.vertex[0];
 	Vector3 tp2 = triangle.vertex[1];
 	Vector3 tp3 = triangle.vertex[2];
+
+	Vector3 lOrigin = segment.origin;
+	Vector3 lDiff = segment.diff;
 
 	/// 三角の法線を求む
 	Vector3 v1 = tp2 - tp1;
 	Vector3 v2 = tp3 - tp2;
 	Vector3 n = Cross(v1, v2);
 
-	/// 平面との衝突点を探す
+	/// 平面との衝突点を探す(基本線と平面の当たり判定と同じ)
+	// まずは内積を求める
+	float dot = Dot(n, segment.diff);
+	if (dot == 0.0f) { return false; }
+	// tを求める
+	float t = (0 - Dot(segment.origin, n)) / dot;
+	if (t < 0 || t > 1) { return false; }
+	Vector3 p = lOrigin + (t * segment.diff);
 
-	
-	Vector3 p = segment.origin * t * b
+	/// 本判定
+	// 各辺を結んだベクトルと、頂点と突点pを結んだベクトルのクロス積を取る
+	Vector3 cross01 = Cross({ tp2 - tp1 }, { p - tp2 });
+	Vector3 cross12 = Cross({ tp3 - tp2 }, { p - tp3 });
+	Vector3 cross20 = Cross({ tp1 - tp3 }, { p - tp1 });
 
-
+	// すべての小三角形のクロス積と法線が同じ方向に向いていたら衝突
+	if (Dot(cross01, n) >= 0.0f &&
+		Dot(cross12, n) >= 0.0f &&
+		Dot(cross20, n) >= 0.0f) {
+		return true;
+	}
 	return false;
 }
