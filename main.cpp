@@ -92,8 +92,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		/// ImGui
 		ImGui::Begin("Balls");
-		ImGui::SliderFloat3("Spehe.center", &sphere.center.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("Spehe.center", &sphere.radius, 0.1f, 2.0f);
+		//ImGui::SliderFloat3("Spehe.center", &sphere.center.x, -5.0f, 5.0f);
+		//ImGui::SliderFloat("Spehe.center", &sphere.radius, 0.1f, 2.0f);
 		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.1f);
 		ImGui::DragFloat("Plane.Distance", &plane.distance, 0.1f);
 		ImGui::End();
