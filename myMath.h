@@ -407,14 +407,13 @@ typedef struct Plane {
 	float distance; //<<< 平面の方程式のdistance
 }Plane;
 
+/// <summary>
+/// Vector3の垂直点を返す
+/// </summary>
+/// <param name="vector">元のVector3</param>
+/// <returns></returns>
 Vector3 Perpendicular(const Vector3& vector);
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
-
-
-
-#pragma endregion
-
-#pragma region Hit judgment
 
 /// 直線
 struct Line {
@@ -434,12 +433,15 @@ struct Segment {
 	Vector3 diff;   //<<< 終点への差分ベクトル
 };
 
+#pragma endregion
+
+#pragma region Hit judgment
+
 /// 正射影ベクトル
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 
 /// 最接近点
 Vector3 ClosestPoint(const Vector3& point, const Segment& segment);
-
 
 #pragma endregion
 

@@ -85,7 +85,7 @@ void crashMap(float* x, float* y, float w, float h, int lx, int rx, int ty);
 void crashBorder(float* x, float* y, float w, float h, int lx, int rx, int ty);
 
 /// <summary>
-/// Ball(Sphere) Hit Decision
+/// Balls(Sphere) Hit Decision
 /// </summary>
 /// <param name="s1">Sphere1</param>
 /// <param name="s2">Sphere2</param>
@@ -93,9 +93,17 @@ void crashBorder(float* x, float* y, float w, float h, int lx, int rx, int ty);
 bool crashDecision(const Sphere& s1,const Sphere& s2);
 
 /// <summary>
-/// Ball(Sphere) Hit Decision
+/// Ball(Sphere) & Plane Hit Decision
 /// </summary>
-/// <param name="s1">Sphere1</param>
-/// <param name="s2">Sphere2</param>
+/// <param name="s1">Sphere</param>
+/// <param name="s2">Plane</param>
 /// <returns>isHit</returns>
 bool crashDecision(const Sphere& s1,const Plane& s2);
+
+/// <summary>
+/// Segment & Plane Hit Decision
+/// </summary>
+/// <param name="s1">Segment</param>
+/// <param name="s2">Sphere</param>
+/// <returns>isHit</returns>
+bool crashDecision(const Segment& s1,const Plane& s2);

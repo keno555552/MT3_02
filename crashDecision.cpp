@@ -119,3 +119,19 @@ bool crashDecision(const Sphere& s1, const Plane& s2)
 	}
 	return false;
 }
+
+bool crashDecision(const Segment& s1, const Plane& s2)
+{
+	/// まずは内積を求める
+	float dot = Dot(s2.normal, s1.diff);
+
+	// 平行してるかをチェック
+	if (dot == 0) {
+		return false;
+	}
+
+	/// tを求める
+	float t = (s2.distance - Dot(s1.origin,s2.normal))/dot;
+
+	return false;
+}

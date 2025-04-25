@@ -12,7 +12,7 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 ///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
 /// 計算に使う値
-Sphere sphere{ { 0.0f, 0.0f, 0.0f }, 0.5f };
+Sphere segment{ { 0.0f, 0.0f, 0.0f }, 0.5f };
 Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -82,13 +82,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// Grid
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
-		/// ボール
-		if (crashDecision(sphere, plane)) {
-			DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
-		} else {
-			DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		}
-		DrawPlane(plane, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		///// ボール
+		//if (crashDecision(sphere, plane)) {
+		//	DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		//} else {
+		//	DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		//}
+		//DrawPlane(plane, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Balls");
