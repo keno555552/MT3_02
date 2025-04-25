@@ -120,18 +120,22 @@ bool crashDecision(const Sphere& s1, const Plane& s2)
 	return false;
 }
 
-bool crashDecision(const Segment& s1, const Plane& s2)
+bool crashDecision(const Segment& segment, const Plane& plane)
 {
 	/// まずは内積を求める
-	float dot = Dot(s2.normal, s1.diff);
+	float dot = Dot(plane.normal, segment.diff);
 
 	// 平行してるかをチェック
-	if (dot == 0) {
+	if (dot == 0.0f) {
 		return false;
 	}
 
 	/// tを求める
-	float t = (s2.distance - Dot(s1.origin,s2.normal))/dot;
+	float t = (plane.distance - Dot(segment.origin,plane.normal))/dot;
 
+	/// tの値と線の種類によって衝突してるかを判断する
+	if (t >= 0 && t <= 1) {
+		return true;
+	}
 	return false;
 }

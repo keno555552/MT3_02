@@ -1017,6 +1017,14 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 					 (int)points[0].x, (int)points[0].y, color);
 }
 
+void Draw3DSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color)
+{
+	// 線分は両端をそれぞれスクリーン座標系まで変換し、Novice::DrawLineを利用して描画する
+	Vector3 start = viewFinilTransform(viewFinilTransform(segment.origin, viewProjectionMatrix), viewportMatrix);
+	Vector3 end = viewFinilTransform(viewFinilTransform(Add(segment.origin, segment.diff), viewProjectionMatrix), viewportMatrix);
+	Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), color);
+}
+
 Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
 	//float a = Length(v1);

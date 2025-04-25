@@ -12,7 +12,7 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 ///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
 /// 計算に使う値
-Sphere segment{ { 0.0f, 0.0f, 0.0f }, 0.5f };
+Segment segment{ { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 2.0f} };
 Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -52,8 +52,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// ボタン処理
 		///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
-		if (keys[DIK_A]) { cameraTranslate.x += 0.1f; }
-		if (keys[DIK_D]) { cameraTranslate.x -= 0.1f; }
+		if (keys[DIK_A]) { cameraTranslate.x -= 0.1f; }
+		if (keys[DIK_D]) { cameraTranslate.x += 0.1f; }
 		if (keys[DIK_W]) { cameraTranslate.z += 0.1f; }
 		if (keys[DIK_S]) { cameraTranslate.z -= 0.1f; }
 		if (keys[DIK_Z]) { cameraRotate.y += 0.1f; }
@@ -82,20 +82,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		/// Grid
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
-		///// ボール
-		//if (crashDecision(sphere, plane)) {
-		//	DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
-		//} else {
-		//	DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		//}
-		//DrawPlane(plane, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		///// 判定と描画
+		if (crashDecision(segment, plane)) {
+			Draw3DSegment(segment, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		} else {
+			Draw3DSegment(segment, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		}
+		DrawPlane(plane, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Balls");
-		//ImGui::SliderFloat3("Spehe.center", &sphere.center.x, -5.0f, 5.0f);
-		//ImGui::SliderFloat("Spehe.center", &sphere.radius, 0.1f, 2.0f);
 		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.1f);
 		ImGui::DragFloat("Plane.Distance", &plane.distance, 0.1f);
+		ImGui::SliderFloat3("Segment.Origin", &segment.origin.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3(" Segment.Diff", &segment.diff.x, -5.0f, 5.0f);
 		ImGui::End();
 
 

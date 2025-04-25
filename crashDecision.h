@@ -104,6 +104,6 @@ bool crashDecision(const Sphere& s1,const Plane& s2);
 /// Segment & Plane Hit Decision
 /// </summary>
 /// <param name="s1">Segment</param>
-/// <param name="s2">Sphere</param>
+/// <param name="s2">Plane</param>
 /// <returns>isHit</returns>
-bool crashDecision(const Segment& s1,const Plane& s2);
+bool crashDecision(const Segment& segment,const Plane& plane);

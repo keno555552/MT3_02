@@ -395,6 +395,7 @@ struct Transform {
 
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
 
+/// 球体
 typedef struct Sphere {
 	Vector3 center;
 	float radius;
@@ -402,6 +403,7 @@ typedef struct Sphere {
 
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
 
+/// 平面
 typedef struct Plane {
 	Vector3 normal; //<<< 法線ベクトル
 	float distance; //<<< 平面の方程式のdistance
@@ -432,6 +434,7 @@ struct Segment {
 	Vector3 origin; //<<< 始点
 	Vector3 diff;   //<<< 終点への差分ベクトル
 };
+void Draw3DSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
 
 #pragma endregion
 
