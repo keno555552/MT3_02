@@ -139,3 +139,23 @@ bool crashDecision(const Segment& segment, const Plane& plane)
 	}
 	return false;
 }
+
+bool crashDecision(const Segment& segment, const Triangle& triangle)
+{
+	Vector3 tp1 = triangle.vertex[0];
+	Vector3 tp2 = triangle.vertex[1];
+	Vector3 tp3 = triangle.vertex[2];
+
+	/// 三角の法線を求む
+	Vector3 v1 = tp2 - tp1;
+	Vector3 v2 = tp3 - tp2;
+	Vector3 n = Cross(v1, v2);
+
+	/// 平面との衝突点を探す
+
+	
+	Vector3 p = segment.origin * t * b
+
+
+	return false;
+}

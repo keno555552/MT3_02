@@ -201,12 +201,12 @@ Matrix3x3 MakeRotateMatrix(const float theta) {
 
 Matrix3x3 Inverse(Matrix3x3 matrix) {
 	float determinant = (matrix.m[0][0] * matrix.m[1][1] * matrix.m[2][2] +
-		matrix.m[0][1] * matrix.m[1][2] * matrix.m[2][0] +
-		matrix.m[0][2] * matrix.m[1][0] * matrix.m[2][1])
+						 matrix.m[0][1] * matrix.m[1][2] * matrix.m[2][0] +
+						 matrix.m[0][2] * matrix.m[1][0] * matrix.m[2][1])
 		-
 		(matrix.m[0][2] * matrix.m[1][1] * matrix.m[2][0] +
-			matrix.m[0][1] * matrix.m[1][0] * matrix.m[2][2] +
-			matrix.m[0][0] * matrix.m[1][2] * matrix.m[2][1]);
+		 matrix.m[0][1] * matrix.m[1][0] * matrix.m[2][2] +
+		 matrix.m[0][0] * matrix.m[1][2] * matrix.m[2][1]);
 
 	return Matrix3x3{ (matrix.m[1][1] * matrix.m[2][2] - matrix.m[1][2] * matrix.m[2][1]) / determinant,
 					 -(matrix.m[0][1] * matrix.m[2][2] - matrix.m[0][2] * matrix.m[2][1]) / determinant,
@@ -820,8 +820,8 @@ Matrix4x4 MakeAffineMatrix(Vector3 scale, Vector3 rotate, Vector3 translate) {
 	Matrix4x4 r1 = MakeScaleMatrix(scale);
 
 	Matrix4x4 r2 = MakeRotateMatrix(MakeRotateXMatrix(rotate.x),
-		MakeRotateYMatrix(rotate.y),
-		MakeRotateZMatrix(rotate.z));
+									MakeRotateYMatrix(rotate.y),
+									MakeRotateZMatrix(rotate.z));
 
 	Matrix4x4 r3 = MakeTranslateMatrix(translate);
 
@@ -905,12 +905,12 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		int color2 = 0x000000FF;
 		if (xIndex == 5) {
 			Novice::DrawLine((int)startV3.x, (int)startV3.y,
-				(int)endV3.x, (int)endV3.y,
-				color2);
+							 (int)endV3.x, (int)endV3.y,
+							 color2);
 		} else {
 			Novice::DrawLine((int)startV3.x, (int)startV3.y,
-				(int)endV3.x, (int)endV3.y,
-				color1);
+							 (int)endV3.x, (int)endV3.y,
+							 color1);
 		}
 	}
 	// 左から右も同じように順々に引いていく
@@ -932,12 +932,12 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 		int color2 = 0x000000FF;
 		if (zIndex == 5) {
 			Novice::DrawLine((int)startV3.x, (int)startV3.y,
-				(int)endV3.x, (int)endV3.y,
-				color2);
+							 (int)endV3.x, (int)endV3.y,
+							 color2);
 		} else {
 			Novice::DrawLine((int)startV3.x, (int)startV3.y,
-				(int)endV3.x, (int)endV3.y,
-				color1);
+							 (int)endV3.x, (int)endV3.y,
+							 color1);
 		}
 	}
 }
@@ -957,30 +957,45 @@ void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, con
 			Vector3 a = { sphere.center.x + sphere.radius * cosf(lat) * cosf(lon),
 						  sphere.center.y + sphere.radius * sinf(lat),
 						  sphere.center.z + sphere.radius * cosf(lat) * sinf(lon) };
-									   
+
 			Vector3 b = { sphere.center.x + sphere.radius * cosf(lat) * cosf(lon + kLonEvery),
 						  sphere.center.y + sphere.radius * sinf(lat),
 						  sphere.center.z + sphere.radius * cosf(lat) * sinf(lon + kLonEvery) };
-									   
+
 			Vector3 c = { sphere.center.x + sphere.radius * cosf(lat + kLatEvery) * cosf(lon),
 						  sphere.center.y + sphere.radius * sinf(lat + kLatEvery),
-						  sphere.center.z + sphere.radius * cosf(lat + kLatEvery)* sinf(lon) };
+						  sphere.center.z + sphere.radius * cosf(lat + kLatEvery) * sinf(lon) };
 
 			// a, b, cをスクリーン座標系に変換
-			
+
 			Vector3 aV2 = viewFinilTransform(a, viewProjectionMatrix);
 			Vector3 bV2 = viewFinilTransform(b, viewProjectionMatrix);
 			Vector3 cV2 = viewFinilTransform(c, viewProjectionMatrix);
 			Vector3 aV3 = viewFinilTransform(aV2, viewportMatrix);
 			Vector3 bV3 = viewFinilTransform(bV2, viewportMatrix);
 			Vector3 cV3 = viewFinilTransform(cV2, viewportMatrix);
-			
+
 			// abとbcの線分を描画
-			Novice::DrawLine((int)aV3.x, (int)aV3.y, 
+			Novice::DrawLine((int)aV3.x, (int)aV3.y,
 							 (int)bV3.x, (int)bV3.y, color);
-			Novice::DrawLine((int)aV3.x, (int)aV3.y, 
+			Novice::DrawLine((int)aV3.x, (int)aV3.y,
 							 (int)cV3.x, (int)cV3.y, color);
 		}
+	}
+}
+
+void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color)
+{
+	for (int i = 0; i < 3; i++) {
+		Vector3 end;
+		Vector3 start = viewFinilTransform(viewFinilTransform(triangle.vertex[i], viewProjectionMatrix), viewportMatrix);
+		if (i != 2) {
+			end = viewFinilTransform(viewFinilTransform(triangle.vertex[i + 1], viewProjectionMatrix), viewportMatrix);
+		} else {
+			end = viewFinilTransform(viewFinilTransform(triangle.vertex[0], viewProjectionMatrix), viewportMatrix);
+		}
+		Novice::DrawLine((int)start.x, (int)start.y,
+						 (int)end.x, (int)end.y, color);
 	}
 }
 
@@ -1017,17 +1032,16 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 					 (int)points[0].x, (int)points[0].y, color);
 }
 
-void Draw3DSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color)
+void Draw3DLine(const Line& line, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color)
 {
 	// 線分は両端をそれぞれスクリーン座標系まで変換し、Novice::DrawLineを利用して描画する
-	Vector3 start = viewFinilTransform(viewFinilTransform(segment.origin, viewProjectionMatrix), viewportMatrix);
-	Vector3 end = viewFinilTransform(viewFinilTransform(Add(segment.origin, segment.diff), viewProjectionMatrix), viewportMatrix);
+	Vector3 start = viewFinilTransform(viewFinilTransform(line.origin, viewProjectionMatrix), viewportMatrix);
+	Vector3 end = viewFinilTransform(viewFinilTransform(Add(line.origin, line.diff), viewProjectionMatrix), viewportMatrix);
 	Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), color);
 }
 
 Vector3 Project(const Vector3& v1, const Vector3& v2)
 {
-	//float a = Length(v1);
 	Vector3 b = Normalize(v2);
 	return Dot(v1, b) * b;
 }
@@ -1038,7 +1052,7 @@ Vector3 ClosestPoint(const Vector3& point, const Segment& segment)
 	float divisions = 100.0f;
 	Segment targetLine = segment;
 
-	for (float t = 0; t < divisions; t ++) {
+	for (float t = 0; t < divisions; t++) {
 		Vector3 now = targetLine.origin + (targetLine.diff / divisions) * t;
 		if (Length(Project(point, resuit)) < Length(Project(point, now))) {
 			resuit = now;

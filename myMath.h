@@ -393,6 +393,26 @@ struct Transform {
 
 #pragma region Geometry
 
+/// 直線
+struct Line {
+	Vector3 origin; //<<< 始点
+	Vector3 diff;   //<<< 終点への差分ベクトル
+};
+
+/// 半直線
+struct Ray {
+	Vector3 origin; //<<< 始点
+	Vector3 diff;   //<<< 終点への差分ベクトル
+};
+
+/// 線分
+struct Segment {
+	Vector3 origin; //<<< 始点
+	Vector3 diff;   //<<< 終点への差分ベクトル
+};
+void Draw3DLine(const Line& line, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
+
+
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix);
 
 /// 球体
@@ -409,6 +429,13 @@ typedef struct Plane {
 	float distance; //<<< 平面の方程式のdistance
 }Plane;
 
+/// 三角
+typedef struct Triangle {
+	Vector3 vertex[3]; //<<< 頂点
+}Triangle;
+
+void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
+
 /// <summary>
 /// Vector3の垂直点を返す
 /// </summary>
@@ -417,24 +444,6 @@ typedef struct Plane {
 Vector3 Perpendicular(const Vector3& vector);
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
 
-/// 直線
-struct Line {
-	Vector3 origin; //<<< 始点
-	Vector3 diff;   //<<< 終点への差分ベクトル
-};
-
-/// 半直線
-struct Ray {
-	Vector3 origin; //<<< 始点
-	Vector3 diff;   //<<< 終点への差分ベクトル
-};					 
-			
-/// 線分
-struct Segment {	 
-	Vector3 origin; //<<< 始点
-	Vector3 diff;   //<<< 終点への差分ベクトル
-};
-void Draw3DSegment(const Segment& segment, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color);
 
 #pragma endregion
 

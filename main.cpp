@@ -12,8 +12,10 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 ///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
 /// 計算に使う値
-Segment segment{ { 0.0f, 0.0f, 0.0f }, { 1.0f, 1.0f, 2.0f} };
-Plane plane{ { 0.0f, 1.0f, 0.0f }, 1.0f };
+Triangle triangle{ Vector3{ -1.0f, 0.0f, 0.0f },
+						  {  0.0f, 1.0f, 0.0f } ,
+						  {  1.0f, 0.0f, 0.0f } };
+Segment segment{ { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.5f,2.0f} };
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -83,17 +85,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
 		///// 判定と描画
-		if (crashDecision(segment, plane)) {
-			Draw3DSegment(segment, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
-		} else {
-			Draw3DSegment(segment, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
-		}
-		DrawPlane(plane, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		//if (crashDecision(segment, plane)) {
+		//	Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		//} else {
+		//	Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		//}
+		DrawTriangle(triangle, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Balls");
-		ImGui::DragFloat3("Plane.Normal", &plane.normal.x, 0.1f);
-		ImGui::DragFloat("Plane.Distance", &plane.distance, 0.1f);
+		ImGui::SliderFloat3("Triangle.p0", &triangle.vertex[0].x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("Triangle.p1", &triangle.vertex[1].x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("Triangle.p2", &triangle.vertex[2].x, -5.0f, 5.0f);
 		ImGui::SliderFloat3("Segment.Origin", &segment.origin.x, -5.0f, 5.0f);
 		ImGui::SliderFloat3(" Segment.Diff", &segment.diff.x, -5.0f, 5.0f);
 		ImGui::End();
