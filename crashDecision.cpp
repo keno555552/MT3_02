@@ -3,20 +3,53 @@
 
 ////////////////////////////////////////////////////////////////////Order//////////////////////////////////////////////////////////////////
 
-extern void drawHitBox(float posX, float posY, float width, float height, unsigned int color) {
+extern void DrawHitBox(float posX, float posY, float width, float height, unsigned int color) {
 	Novice::DrawLine(int(posX - width / 2), int(posY - height / 2),
-		int(posX + width / 2), int(posY - height / 2), color);
+					 int(posX + width / 2), int(posY - height / 2), color);
 	Novice::DrawLine(int(posX + width / 2), int(posY - height / 2),
-		int(posX + width / 2), int(posY + height / 2), color);
+					 int(posX + width / 2), int(posY + height / 2), color);
 	Novice::DrawLine(int(posX + width / 2), int(posY + height / 2),
-		int(posX - width / 2), int(posY + height / 2), color);
+					 int(posX - width / 2), int(posY + height / 2), color);
 	Novice::DrawLine(int(posX - width / 2), int(posY + height / 2),
-		int(posX - width / 2), int(posY - height / 2), color);
+					 int(posX - width / 2), int(posY - height / 2), color);
+}
+
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color)
+{
+	Vector3 p[8];
+	Vector3 p2[8];
+	Vector3 p3[8];
+	p[0] = { aabb.min.x,aabb.min.y,aabb.min.z };
+	p[1] = { aabb.min.x,aabb.min.y,aabb.max.z };
+	p[2] = { aabb.min.x,aabb.max.y,aabb.max.z };
+	p[3] = { aabb.min.x,aabb.max.y,aabb.min.z };
+
+	p[4] = { aabb.max.x,aabb.min.y,aabb.min.z };
+	p[5] = { aabb.max.x,aabb.min.y,aabb.max.z };
+	p[6] = { aabb.max.x,aabb.max.y,aabb.max.z };
+	p[7] = { aabb.max.x,aabb.max.y,aabb.min.z };
+
+	for (int i = 0; i < 8; i++) {
+		p2[i] = viewFinilTransform(p[i], viewProjectionMatrix);
+		p3[i] = viewFinilTransform(p2[i], viewportMatrix);
+	}
+
+	for (int i = 0; i < 4; i++) {
+		if (i < 3) {
+			Novice::DrawLine(int(p3[i].x), int(p3[i].y), int(p3[i + 1].x), int(p3[i + 1].y), color);
+			Novice::DrawLine(int(p3[i + 4].x), int(p3[i + 4].y), int(p3[i + 4 + 1].x), int(p3[i + 4 + 1].y), color);
+		} else {
+			Novice::DrawLine(int(p3[i].x), int(p3[i].y), int(p3[i - 3].x), int(p3[i - 3].y), color);
+			Novice::DrawLine(int(p3[i + 4].x), int(p3[i + 4].y), int(p3[i + 4 - 3].x), int(p3[i + 4 - 3].y), color);
+		}
+		Novice::DrawLine(int(p3[i].x), int(p3[i].y), int(p3[i + 4].x), int(p3[i + 4].y), color);
+	}
 }
 
 
 
-bool crashDecisionBoxBool(float XA, float YA, float widthA, float heightA, float XB, float YB, float widthB, float heightB) {
+
+bool CrashDecisionBoxBool(float XA, float YA, float widthA, float heightA, float XB, float YB, float widthB, float heightB) {
 	Vector2 A[2] = { { XA - widthA / 2, YA + heightA / 2},{ XA + widthA / 2, YA - heightA / 2 } };
 	Vector2 B[2] = { { XB - widthB / 2, YB + heightB / 2},{ XB + widthB / 2, YB - heightB / 2 } };
 	int DFlat[2] = {};
@@ -167,6 +200,16 @@ bool crashDecision(const Segment& segment, const Triangle& triangle) {
 	if (Dot(cross01, n) >= 0.0f &&
 		Dot(cross12, n) >= 0.0f &&
 		Dot(cross20, n) >= 0.0f) {
+		return true;
+	}
+	return false;
+}
+
+bool crashDecision(const AABB& a, const AABB& b)
+{
+	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {
 		return true;
 	}
 	return false;

@@ -9,6 +9,11 @@ struct AttactBox final {
 	float height;
 };
 
+struct AABB final {
+	Vector3 min;
+	Vector3 max;
+};
+
 /// <summary>
 /// Draw HitBox
 /// </summary>
@@ -19,7 +24,21 @@ struct AttactBox final {
 /// <param name="HitBox Width"></param>
 /// <param name="HitBox Height"></param>
 /// <param name="color"></param>
-extern void drawHitBox(float posX, float posY, float width, float height, unsigned int color);
+extern void DrawHitBox(float posX, float posY, float width, float height, unsigned int color);
+
+/// <summary>
+/// Draw HitBox
+/// </summary>
+/// <param name="posX"></param>
+/// <param name="posY"></param>
+/// <param name="Pos Move X"></param>
+/// <param name="Pos Move Y"></param>
+/// <param name="HitBox Width"></param>
+/// <param name="HitBox Height"></param>
+/// <param name="color"></param>
+extern void DrawAABB(const AABB& aabb,const Matrix4x4& viewProjectionMatrix,const Matrix4x4& viewportMatrix, int color);
+
+
 
 /// <summary>
 /// Hit Box Crash Decision
@@ -32,7 +51,7 @@ extern void drawHitBox(float posX, float posY, float width, float height, unsign
 /// <param name="hit box 2 center pos.y"></param>
 /// <param name="hit box 2 width"></param>
 /// <param name="hit box 2 height"></param>
-bool crashDecisionBoxBool(float XA, float YA, float widthA, float heightA, float XB, float YB, float widthB, float heightB);
+bool CrashDecisionBoxBool(float XA, float YA, float widthA, float heightA, float XB, float YB, float widthB, float heightB);
 
 /// <summary>
 /// Circle Hit Box Crash Decision
@@ -115,3 +134,11 @@ bool crashDecision(const Segment& segment,const Plane& plane);
 /// <param name="s2">Triangle</param>
 /// <returns>isHit</returns>
 bool crashDecision(const Segment& segment,const Triangle& triangle);
+
+/// <summary>
+/// Segment & Triangle Hit Decision
+/// </summary>
+/// <param name="s1">Segment</param>
+/// <param name="s2">Triangle</param>
+/// <returns>isHit</returns>
+bool crashDecision(const AABB& aabb1,const AABB& aabb2);

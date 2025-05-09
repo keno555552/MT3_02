@@ -371,6 +371,14 @@ Matrix4x4 MakeViewportMatrix(float   left, float     top,
 	float    minD, float    maxD);
 
 /// <summary>
+/// ビューポート変換数列生成
+/// </summary>
+/// <returns>結果Matrix4x4</returns>
+Matrix4x4 MakeOrthographicMatrix(float   left, float   top,
+	float  right, float  bottom,
+	float  nearClip, float  farClip);
+
+/// <summary>
 ///　3Dカメラの総まとめ変換
 /// </summary>
 /// <param name="obj">もの自身のワルド座標</param>

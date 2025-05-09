@@ -12,10 +12,14 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 ///=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 
 /// 計算に使う値
-Triangle triangle{ Vector3{ -1.0f, 0.0f, 0.0f },
-						  {  0.0f, 1.0f, 0.0f } ,
-						  {  1.0f, 0.0f, 0.0f } };
-Segment segment{ { 0.0f, 0.0f, -1.0f }, { 0.0f, 0.5f,2.0f} };
+AABB aabb1{
+	.min{-0.5f,-0.5f,-0.5f},
+	.max{ 0.0f, 0.0f, 0.0f}
+};
+AABB aabb2{
+	.min{ 0.2f, 0.2f, 0.2f},
+	.max{ 1.0f, 1.0f, 1.0f}
+};
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -85,20 +89,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
 		/// 判定と描画
-		if (crashDecision(segment, triangle)) {
-			Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
+		if (crashDecision(aabb1, aabb2)) {
+			DrawAABB(aabb1, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
 		} else {
-			Draw3DLine({ segment.origin, segment.diff }, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+			DrawAABB(aabb1, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 		}
-		DrawTriangle(triangle, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		DrawAABB(aabb2, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
-		ImGui::Begin("Balls");
-		ImGui::SliderFloat3("Triangle.p0", &triangle.vertex[0].x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Triangle.p1", &triangle.vertex[1].x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Triangle.p2", &triangle.vertex[2].x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("Segment.Origin", &segment.origin.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3(" Segment.Diff", &segment.diff.x, -5.0f, 5.0f);
+		ImGui::Begin("Control Penol");
+		ImGui::SliderFloat3("aabb1.min", &aabb1.min.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("aabb1.max", &aabb1.max.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("aabb2.min", &aabb2.min.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("aabb2.max", &aabb2.max.x, -5.0f, 5.0f);
 		ImGui::End();
 
 
