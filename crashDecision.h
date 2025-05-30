@@ -136,7 +136,7 @@ bool crashDecision(const Segment& segment,const Plane& plane);
 bool crashDecision(const Segment& segment,const Triangle& triangle);
 
 /// <summary>
-/// Segment & Triangle Hit Decision
+/// AABB & AABB Hit Decision
 /// </summary>
 /// <param name="s1">Segment</param>
 /// <param name="s2">Triangle</param>
