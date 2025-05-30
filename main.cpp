@@ -16,9 +16,9 @@ AABB aabb1{
 	.min{-0.5f,-0.5f,-0.5f},
 	.max{ 0.0f, 0.0f, 0.0f}
 };
-AABB aabb2{
-	.min{ 0.2f, 0.2f, 0.2f},
-	.max{ 1.0f, 1.0f, 1.0f}
+Sphere sphere{
+	{1.0f,1.0f,1.0f },
+	1.0f
 };
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -80,6 +80,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		cameraWorldViewProjectionMatrix = cameraViewMatrix * cameraProjectionMatrix;
 		cameraViewportMatrix = MakeViewportMatrix(0.0f, 0.0f, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
+		/// MaxMin制限
+		if (aabb1.max.x < aabb1.min.x) { aabb1.max.x = aabb1.min.x + 0.01f; }
+		if (aabb1.max.y < aabb1.min.y) { aabb1.max.y = aabb1.min.y + 0.01f; }
+		if (aabb1.max.z < aabb1.min.z) { aabb1.max.z = aabb1.min.z + 0.01f; }
 
 		///=========================================================================================================================================================================================
 		/// 描画処理
@@ -89,19 +93,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
 		/// 判定と描画
-		if (crashDecision(aabb1, aabb2)) {
+		if (crashDecision(aabb1, sphere)) {
 			DrawAABB(aabb1, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
 		} else {
 			DrawAABB(aabb1, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 		}
-		DrawAABB(aabb2, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Control Penol");
 		ImGui::SliderFloat3("aabb1.min", &aabb1.min.x, -5.0f, 5.0f);
 		ImGui::SliderFloat3("aabb1.max", &aabb1.max.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("aabb2.min", &aabb2.min.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("aabb2.max", &aabb2.max.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("aabb2.min", &sphere.center.x, -5.0f, 5.0f);
+		ImGui::SliderFloat("aabb2.max", &sphere.radius, -5.0f, 5.0f);
 		ImGui::End();
 
 

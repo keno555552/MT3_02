@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <Math.h>
+#include <algorithm>
 #include "Novice.h"
 #include "myMath.h"
 
@@ -136,9 +137,17 @@ bool crashDecision(const Segment& segment,const Plane& plane);
 bool crashDecision(const Segment& segment,const Triangle& triangle);
 
 /// <summary>
-/// Segment & Triangle Hit Decision
+/// AABB & AABB Hit Decision
 /// </summary>
-/// <param name="s1">Segment</param>
-/// <param name="s2">Triangle</param>
+/// <param name="s1">AABB1</param>
+/// <param name="s2">AABB2</param>
 /// <returns>isHit</returns>
 bool crashDecision(const AABB& aabb1,const AABB& aabb2);
+
+/// <summary>
+/// AABB & Sphere Hit Decision
+/// </summary>
+/// <param name="s1">AABB</param>
+/// <param name="s2">Sphere</param>
+/// <returns>isHit</returns>
+bool crashDecision(const AABB& aabb1,const Sphere& sphere);

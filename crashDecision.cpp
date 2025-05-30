@@ -214,3 +214,17 @@ bool crashDecision(const AABB& a, const AABB& b)
 	}
 	return false;
 }
+
+bool crashDecision(const AABB& a, const Sphere& sphere)
+{
+	Vector3 closestPoint{ std::clamp(sphere.center.x, a.min.x,a.max.x),
+						  std::clamp(sphere.center.y, a.min.y,a.max.y) ,
+						  std::clamp(sphere.center.z, a.min.z,a.max.z) };
+
+	float distance = Length(closestPoint - sphere.center);
+
+	if (distance <= sphere.radius) {
+		return true;
+	}
+	return false;
+}
