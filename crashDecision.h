@@ -15,6 +15,12 @@ struct AABB final {
 	Vector3 max;
 };
 
+struct OBB final {
+	Vector3 oriertations[3];
+	Vector3 center;
+	Vector3 size;
+};
+
 /// <summary>
 /// Draw HitBox
 /// </summary>
@@ -151,3 +157,11 @@ bool crashDecision(const AABB& aabb1,const AABB& aabb2);
 /// <param name="s2">Sphere</param>
 /// <returns>isHit</returns>
 bool crashDecision(const AABB& aabb1,const Sphere& sphere);
+
+/// <summary>
+/// AABB & Segment Hit Decision
+/// </summary>
+/// <param name="s1">AABB</param>
+/// <param name="s2">Sphere</param>
+/// <returns>isHit</returns>
+bool crashDecision(const AABB& aabb1,const Segment& segment);

@@ -14,11 +14,11 @@ int kWindowWidth = 1280, kWindowHeight = 720;
 /// 計算に使う値
 AABB aabb1{
 	.min{-0.5f,-0.5f,-0.5f},
-	.max{ 0.0f, 0.0f, 0.0f}
+	.max{ 0.5f, 0.5f, 0.5f}
 };
-Sphere sphere{
-	{1.0f,1.0f,1.0f },
-	1.0f
+Segment segment{
+	.origin{ -0.7f,  0.3f, 0.0f },
+	  .diff{  2.0f, -0.5f, 0.0f }
 };
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -93,19 +93,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(cameraWorldViewProjectionMatrix, cameraViewportMatrix);
 
 		/// 判定と描画
-		if (crashDecision(aabb1, sphere)) {
+		if (crashDecision(aabb1, segment)) {
 			DrawAABB(aabb1, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFF0000FF);
 		} else {
 			DrawAABB(aabb1, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 		}
-		DrawSphere(sphere, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
+		Line l{ segment.origin,segment.diff };
+		Draw3DLine(l, cameraWorldViewProjectionMatrix, cameraViewportMatrix, 0xFFFFFFFF);
 
 		/// ImGui
 		ImGui::Begin("Control Penol");
 		ImGui::SliderFloat3("aabb1.min", &aabb1.min.x, -5.0f, 5.0f);
 		ImGui::SliderFloat3("aabb1.max", &aabb1.max.x, -5.0f, 5.0f);
-		ImGui::SliderFloat3("aabb2.min", &sphere.center.x, -5.0f, 5.0f);
-		ImGui::SliderFloat("aabb2.max", &sphere.radius, -5.0f, 5.0f);
+		ImGui::SliderFloat3("segment.origin", &segment.origin.x, -5.0f, 5.0f);
+		ImGui::SliderFloat3("segment.diff", &segment.diff.x, -5.0f, 5.0f);
 		ImGui::End();
 
 

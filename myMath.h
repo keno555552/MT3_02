@@ -456,7 +456,13 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 
 #pragma region Hit judgment
 
+
+/// <summary>
 /// 正射影ベクトル
+/// </summary>
+/// <param name="v1">目標の線</param>
+/// <param name="v2">点</param>
+/// <returns></returns>
 Vector3 Project(const Vector3& v1, const Vector3& v2);
 
 /// 最接近点

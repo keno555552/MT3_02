@@ -5,17 +5,16 @@
 
 extern void DrawHitBox(float posX, float posY, float width, float height, unsigned int color) {
 	Novice::DrawLine(int(posX - width / 2), int(posY - height / 2),
-					 int(posX + width / 2), int(posY - height / 2), color);
+		int(posX + width / 2), int(posY - height / 2), color);
 	Novice::DrawLine(int(posX + width / 2), int(posY - height / 2),
-					 int(posX + width / 2), int(posY + height / 2), color);
+		int(posX + width / 2), int(posY + height / 2), color);
 	Novice::DrawLine(int(posX + width / 2), int(posY + height / 2),
-					 int(posX - width / 2), int(posY + height / 2), color);
+		int(posX - width / 2), int(posY + height / 2), color);
 	Novice::DrawLine(int(posX - width / 2), int(posY + height / 2),
-					 int(posX - width / 2), int(posY - height / 2), color);
+		int(posX - width / 2), int(posY - height / 2), color);
 }
 
-void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color)
-{
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, int color) {
 	Vector3 p[8];
 	Vector3 p2[8];
 	Vector3 p3[8];
@@ -205,8 +204,7 @@ bool crashDecision(const Segment& segment, const Triangle& triangle) {
 	return false;
 }
 
-bool crashDecision(const AABB& a, const AABB& b)
-{
+bool crashDecision(const AABB& a, const AABB& b) {
 	if ((a.min.x <= b.max.x && a.max.x >= b.min.x) &&
 		(a.min.y <= b.max.y && a.max.y >= b.min.y) &&
 		(a.min.z <= b.max.z && a.max.z >= b.min.z)) {
@@ -215,8 +213,7 @@ bool crashDecision(const AABB& a, const AABB& b)
 	return false;
 }
 
-bool crashDecision(const AABB& a, const Sphere& sphere)
-{
+bool crashDecision(const AABB& a, const Sphere& sphere) {
 	Vector3 closestPoint{ std::clamp(sphere.center.x, a.min.x,a.max.x),
 						  std::clamp(sphere.center.y, a.min.y,a.max.y) ,
 						  std::clamp(sphere.center.z, a.min.z,a.max.z) };
@@ -228,3 +225,54 @@ bool crashDecision(const AABB& a, const Sphere& sphere)
 	}
 	return false;
 }
+
+bool crashDecision(const AABB& a, const Segment& segment) {
+	float tNearX, tFarX, tNearY, tFarY, tNearZ, tFarZ;
+
+	///まず距離が0どうかを判断
+	if (segment.diff.x != 0) {
+		///線分のtを見つかる(主に使う判断材料)
+		tNearX = (a.min.x - segment.origin.x) / segment.diff.x;
+		tFarX = (a.max.x - segment.origin.x) / segment.diff.x;
+		if (segment.diff.x < 0) { std::swap(tNearX, tFarX); }
+	} else {
+		///もし距離が0になると、線は平面的に、上の計算が０除算になると
+		///それを避けるには、まず線がAABBの中にあるかどうかを判断
+		/// なければfalseを返す、あると-INFINITYで、他の判断に回る
+		if (segment.origin.x < a.min.x || segment.origin.x > a.max.x) return false;
+		tNearX = -INFINITY;
+		tFarX = INFINITY;
+	}
+
+	if (segment.diff.y != 0) {
+		tNearY = (a.min.y - segment.origin.y) / segment.diff.y;
+		tFarY = (a.max.y - segment.origin.y) / segment.diff.y;
+		if (segment.diff.y < 0) { std::swap(tNearY, tFarY); }
+	} else {
+		if (segment.origin.y < a.min.y || segment.origin.y > a.max.y) return false;
+		tNearY = -INFINITY;
+		tFarY = INFINITY;
+	}
+
+	if (segment.diff.z != 0) {
+		tNearZ = (a.min.z - segment.origin.z) / segment.diff.z;
+		tFarZ = (a.max.z - segment.origin.z) / segment.diff.z;
+		if (segment.diff.z < 0) { std::swap(tNearZ, tFarZ); }
+	} else {
+		if (segment.origin.z < a.min.z || segment.origin.z > a.max.z) return false;
+		tNearZ = -INFINITY;
+		tFarZ = INFINITY;
+	}
+
+	/// AABBに入る点を探す
+	float tmin = max(max(tNearX, tNearY), tNearZ);
+	/// AABBに出る点を探す
+	float tmax = min(min(tFarX, tFarY), tFarZ);
+
+	/// 点が線の長さ外になるとfalse
+	if (tmax < 0 || tmin > 1) return false;
+
+	/// 判定基準は2_7 p.5参考
+	return tmin <= tmax;
+}
+
